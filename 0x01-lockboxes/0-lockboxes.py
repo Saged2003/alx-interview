@@ -1,34 +1,50 @@
-
 #!/usr/bin/python3
-'''LockBoxes Challenge'''
+"""
+Lockboxes problem
+"""
 
 
 def canUnlockAll(boxes):
-    '''determines if all the boxes can be opened or not
-    Returns:
-        True: all boxes can be opened
-        False: not all boxes can be opened
-    '''
-    length = len(boxes)
-    keys = set()
-    opened_boxes = []
-    i = 0
+    """
+    Determine if all boxes can be opened
+    """
+    unlocked_boxes = set()
+    keys = set(boxes[0])
+    unlocked_boxes.add(0)
 
-    while i < length:
-        oldi = i
-        opened_boxes.append(i)
-        keys.update(boxes[i])
-        for key in keys:
-            if key != 0 and key < length and key not in opened_boxes:
-                i = key
-                break
-        if oldi != i:
-            continue
-        else:
-            break
+    while keys:
+        key = keys.pop()
+        if key < len(boxes) and key not in unlocked_boxes:
+            unlocked_boxes.add(key)
+            keys.update(boxes[key])
 
-    for i in range(length):
-        if i not in opened_boxes and i != 0:
-            return False
-    return True
+    return len(unlocked_boxes) == len(boxes)
 
+
+'''
+DFS code but have one error
+
+#!/usr/bin/python3
+"""
+Check if all boxes can be opened using DFS
+"""
+
+
+def dfs(node, boxes, visit):
+    """
+    Perform DFS to visit all nodes reachable from the current node.
+    """
+    visit.add(node)
+    for key in boxes[node]:
+        if key not in visit and key < len(boxes):
+            dfs(key, boxes, visit)
+
+
+def canUnlockAll(boxes):
+    """
+    Determine if all boxes can be unlocked.
+    """
+    visit = set()
+    dfs(0, boxes, visit)
+    return len(visit) == len(boxes)
+'''
